@@ -43,7 +43,7 @@ const OAUTH_TIMEOUT_SECS: u64 = 300;
 const HTML_AUTO_CLOSE_TIMEOUT_MS: u64 = 2000;
 
 const CHATGPT_CODEX_PROVIDER_NAME: &str = "chatgpt_codex";
-pub const CHATGPT_CODEX_DEFAULT_MODEL: &str = "gpt-5.5";
+pub const CHATGPT_CODEX_DEFAULT_MODEL: &str = "gpt-5.6-sol";
 
 #[derive(Debug)]
 pub struct ChatGptCodexModelAttrs {
@@ -1050,6 +1050,7 @@ impl Provider for ChatGptCodexProvider {
 mod tests {
     use super::*;
     use crate::conversation::message::Message;
+    use goose_providers::base::ProviderDescriptor;
     use goose_test_support::TEST_IMAGE_B64;
     use jsonwebtoken::{Algorithm, EncodingKey, Header};
     use rmcp::model::{CallToolRequestParams, CallToolResult, Content, ErrorCode, ErrorData};
@@ -1413,6 +1414,18 @@ mod tests {
         assert!(names.contains(&"gpt-5.6-terra"));
         assert!(names.contains(&"gpt-5.6-luna"));
         assert!(names.contains(&"gpt-5.6"));
+    }
+
+    #[test]
+    fn test_chatgpt_codex_default_model_is_current_gpt_5_6_sol() {
+        let metadata = ChatGptCodexProvider::metadata();
+
+        assert_eq!(CHATGPT_CODEX_DEFAULT_MODEL, "gpt-5.6-sol");
+        assert_eq!(metadata.default_model, "gpt-5.6-sol");
+        assert!(metadata
+            .known_models
+            .iter()
+            .any(|model| model.name == "gpt-5.6-sol"));
     }
 
     #[test]

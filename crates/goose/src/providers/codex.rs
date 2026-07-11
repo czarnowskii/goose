@@ -27,8 +27,14 @@ use rmcp::model::Role;
 use rmcp::model::Tool;
 
 const CODEX_PROVIDER_NAME: &str = "codex";
-pub const CODEX_DEFAULT_MODEL: &str = "gpt-5.2-codex";
+pub const CODEX_DEFAULT_MODEL: &str = "gpt-5.6-sol";
 pub const CODEX_KNOWN_MODELS: &[&str] = &[
+    "gpt-5.6-sol",
+    "gpt-5.6-terra",
+    "gpt-5.6-luna",
+    "gpt-5.6",
+    "gpt-5.5",
+    "gpt-5.4",
     "gpt-5.2-codex",
     "gpt-5.2",
     "gpt-5.1-codex-max",
@@ -1296,7 +1302,7 @@ mod tests {
 
     #[test]
     fn test_default_model() {
-        assert_eq!(CODEX_DEFAULT_MODEL, "gpt-5.2-codex");
+        assert_eq!(CODEX_DEFAULT_MODEL, "gpt-5.6-sol");
     }
 
     #[test_case(GooseMode::Auto, &["--yolo"] ; "auto_yolo")]
