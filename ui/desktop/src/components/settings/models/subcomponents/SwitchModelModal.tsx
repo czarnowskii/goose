@@ -810,7 +810,7 @@ export const SwitchModelModal = ({
           ) : (
             /* Manual Provider/Model Selection */
             <div className="w-full flex flex-col gap-4">
-              <div>
+              <div data-feedback-id="model-provider-list">
                 <Select
                   options={providerOptions}
                   value={providerOptions.find((option) => option.value === provider) || null}
@@ -897,7 +897,7 @@ export const SwitchModelModal = ({
                       )}
                     </div>
                   ) : !isCustomModel ? (
-                    <div>
+                    <div data-feedback-id="model-list">
                       <Select
                         options={
                           loadingModels

@@ -1,4 +1,4 @@
-import type { OpenDialogOptions, OpenDialogReturnValue } from 'electron';
+import type { OpenDialogOptions, OpenDialogReturnValue, Rectangle } from 'electron';
 import {
   app,
   App,
@@ -51,6 +51,13 @@ import {
 import { UPDATES_ENABLED } from './updates';
 import './utils/recipeHash';
 import type { GooseApp } from './types/apps';
+import type {
+  FeedbackComment,
+  FeedbackDraft,
+  FeedbackRect,
+  FeedbackStore,
+  FeedbackTarget,
+} from './types/feedback';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { BLOCKED_PROTOCOLS, WEB_PROTOCOLS } from './utils/urlSecurity';
 import { buildCSP } from './utils/csp';
@@ -169,6 +176,9 @@ function translateMenuLabels(items: MenuItem[]): void {
 // Settings management
 const SETTINGS_FILE = path.join(app.getPath('userData'), 'settings.json');
 const STARTUP_LOGS_DIR = path.join(app.getPath('userData'), 'logs', 'startup');
+const FEEDBACK_DIR = path.join(app.getPath('userData'), 'feedback');
+const FEEDBACK_FILE = path.join(FEEDBACK_DIR, 'feedback.json');
+const FEEDBACK_ASSETS_DIR = path.join(FEEDBACK_DIR, 'assets');
 const validLanguageSettings = new Set<Settings['language']>([
   'system',
   'en',
@@ -223,6 +233,66 @@ function updateSettings(modifier: (settings: Settings) => void): void {
   const settings = getSettings();
   modifier(settings);
   fsSync.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
+}
+
+function emptyFeedbackStore(): FeedbackStore {
+  return { version: 1, nextNumber: 1, comments: [] };
+}
+
+async function readFeedbackStore(): Promise<FeedbackStore> {
+  try {
+    const contents = await fs.readFile(FEEDBACK_FILE, 'utf8');
+    const store = JSON.parse(contents) as FeedbackStore;
+    if (
+      store.version !== 1 ||
+      !Array.isArray(store.comments) ||
+      !Number.isInteger(store.nextNumber)
+    ) {
+      throw new Error('Feedback store has an unsupported format');
+    }
+    return store;
+  } catch (error) {
+    if ((error as { code?: string }).code === 'ENOENT') {
+      return emptyFeedbackStore();
+    }
+    throw error;
+  }
+}
+
+async function writeFeedbackStore(store: FeedbackStore): Promise<void> {
+  await fs.mkdir(FEEDBACK_DIR, { recursive: true });
+  const temporaryFile = `${FEEDBACK_FILE}.tmp`;
+  await fs.writeFile(temporaryFile, JSON.stringify(store, null, 2), 'utf8');
+  await fs.rename(temporaryFile, FEEDBACK_FILE);
+}
+
+function validateFeedbackTarget(value: unknown): FeedbackTarget {
+  if (!value || typeof value !== 'object') {
+    throw new Error('Feedback target is required');
+  }
+  const target = value as Partial<FeedbackTarget>;
+  const rect = target.rect as Partial<FeedbackRect> | undefined;
+  if (
+    typeof target.selector !== 'string' ||
+    typeof target.tagName !== 'string' ||
+    !rect ||
+    ![rect.x, rect.y, rect.width, rect.height].every(Number.isFinite)
+  ) {
+    throw new Error('Feedback target is invalid');
+  }
+  return target as FeedbackTarget;
+}
+
+function screenshotBounds(rect: FeedbackRect, window: BrowserWindow): Rectangle {
+  const contentBounds = window.getContentBounds();
+  const x = Math.max(0, Math.min(Math.floor(rect.x), contentBounds.width - 1));
+  const y = Math.max(0, Math.min(Math.floor(rect.y), contentBounds.height - 1));
+  return {
+    x,
+    y,
+    width: Math.max(1, Math.min(Math.ceil(rect.width), contentBounds.width - x)),
+    height: Math.max(1, Math.min(Math.ceil(rect.height), contentBounds.height - y)),
+  };
 }
 
 function getConfiguredGooseLocale(): string | undefined {
@@ -1892,6 +1962,67 @@ ipcMain.handle('list-recent-dirs', () => {
 
 ipcMain.handle('list-git-worktree-dirs', async (_event, dir: string) => {
   return await listGitWorktreeDirs(dir);
+});
+
+ipcMain.handle('feedback-list', async () => {
+  const store = await readFeedbackStore();
+  return {
+    comments: store.comments.filter((comment) => comment.status === 'open'),
+    storePath: FEEDBACK_FILE,
+  };
+});
+
+ipcMain.handle('feedback-create', async (event, value: unknown) => {
+  if (!value || typeof value !== 'object') {
+    throw new Error('Feedback is required');
+  }
+  const draft = value as Partial<FeedbackDraft>;
+  const comment = typeof draft.comment === 'string' ? draft.comment.trim() : '';
+  if (!comment || comment.length > 10_000) {
+    throw new Error('Feedback comment must contain between 1 and 10,000 characters');
+  }
+  const target = validateFeedbackTarget(draft.target);
+  const store = await readFeedbackStore();
+  const feedbackNumber = store.nextNumber;
+  const id = crypto.randomUUID();
+  let screenshotPath: string | undefined;
+  const window = BrowserWindow.fromWebContents(event.sender);
+
+  if (window) {
+    await fs.mkdir(FEEDBACK_ASSETS_DIR, { recursive: true });
+    screenshotPath = path.join(FEEDBACK_ASSETS_DIR, `feedback-${feedbackNumber}.png`);
+    const screenshot = await window.webContents.capturePage(screenshotBounds(target.rect, window));
+    await fs.writeFile(screenshotPath, screenshot.toPNG());
+  }
+
+  const feedback: FeedbackComment = {
+    id,
+    number: feedbackNumber,
+    comment,
+    status: 'open',
+    target,
+    screenshotPath,
+    createdAt: new Date().toISOString(),
+  };
+  store.nextNumber += 1;
+  store.comments.push(feedback);
+  await writeFeedbackStore(store);
+  return feedback;
+});
+
+ipcMain.handle('feedback-resolve', async (_event, id: unknown) => {
+  if (typeof id !== 'string') {
+    throw new Error('Feedback id is invalid');
+  }
+  const store = await readFeedbackStore();
+  const feedback = store.comments.find((comment) => comment.id === id);
+  if (!feedback) {
+    throw new Error('Feedback comment was not found');
+  }
+  feedback.status = 'resolved';
+  feedback.resolvedAt = new Date().toISOString();
+  await writeFeedbackStore(store);
+  return feedback;
 });
 
 ipcMain.handle('get-setting', (_event, key: SettingKey) => {

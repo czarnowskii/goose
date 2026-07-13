@@ -58,6 +58,7 @@ import { usePageViewTracking } from './hooks/useAnalytics';
 import { trackErrorWithContext } from './utils/analytics';
 import { AppEvents } from './constants/events';
 import { registerPlatformEventHandlers } from './utils/platform_events';
+import { FeedbackMode } from './components/feedback/FeedbackMode';
 
 function PageViewTracker() {
   usePageViewTracking();
@@ -665,6 +666,7 @@ export function AppInner() {
           </Routes>
         </div>
       </div>
+      <FeedbackMode />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import Electron, { contextBridge, ipcRenderer, webUtils } from 'electron';
 import { Recipe } from './recipe';
 import type { GooseApp } from './types/apps';
+import type { FeedbackComment, FeedbackDraft, FeedbackListResult } from './types/feedback';
 import type { Settings, SettingKey } from './utils/settings';
 import { defaultSettings } from './utils/settings';
 
@@ -178,6 +179,9 @@ type ElectronAPI = {
   addRecentDir: (dir: string) => Promise<boolean>;
   listRecentDirs: () => Promise<string[]>;
   listGitWorktreeDirs: (dir: string) => Promise<string[]>;
+  listFeedback: () => Promise<FeedbackListResult>;
+  createFeedback: (draft: FeedbackDraft) => Promise<FeedbackComment>;
+  resolveFeedback: (id: string) => Promise<FeedbackComment>;
 };
 
 type AppConfigAPI = {
@@ -335,6 +339,9 @@ const electronAPI: ElectronAPI = {
   addRecentDir: (dir: string) => ipcRenderer.invoke('add-recent-dir', dir),
   listRecentDirs: () => ipcRenderer.invoke('list-recent-dirs'),
   listGitWorktreeDirs: (dir: string) => ipcRenderer.invoke('list-git-worktree-dirs', dir),
+  listFeedback: () => ipcRenderer.invoke('feedback-list'),
+  createFeedback: (draft: FeedbackDraft) => ipcRenderer.invoke('feedback-create', draft),
+  resolveFeedback: (id: string) => ipcRenderer.invoke('feedback-resolve', id),
 };
 
 function getAppLocale(): unknown {
