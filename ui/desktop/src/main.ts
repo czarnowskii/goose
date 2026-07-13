@@ -289,7 +289,7 @@ async function configureProxy() {
   }
 }
 
-if (started) app.quit();
+if (process.platform === 'win32' && started) app.quit();
 
 // Certificate trust for active backend leases. Renderer requests and
 // main-process net.fetch both pin to the exact cert fingerprint. Each backend
@@ -404,27 +404,15 @@ if (process.env.ENABLE_PLAYWRIGHT) {
   app.commandLine.appendSwitch('remote-debugging-port', debugPort);
 }
 
-// In development mode, force registration as the default protocol client
-// In production, register normally
+// Protocol ownership belongs to installed builds. Registering it from Electron Forge can
+// relaunch the installed app and replace the development window with a packaged build.
 if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-  // Development mode - force registration
-  console.log('[Main] Development mode: Forcing protocol registration for goose://');
-  app.setAsDefaultProtocolClient('goose');
-
-  if (process.platform === 'darwin') {
-    try {
-      // Reset the default handler to ensure dev version takes precedence
-      spawn('open', ['-a', process.execPath, '--args', '--reset-protocol-handler', 'goose'], {
-        detached: true,
-        stdio: 'ignore',
-      });
-    } catch {
-      console.warn('[Main] Could not reset protocol handler');
-    }
-  }
+  console.log('[Main] Development mode: Leaving goose:// protocol registration unchanged');
 } else {
-  // Production mode - normal registration
-  app.setAsDefaultProtocolClient('goose');
+  const registered = app.setAsDefaultProtocolClient('goose');
+  if (!registered) {
+    console.warn('[Main] Could not register goose:// protocol handler');
+  }
 }
 
 // Apply single instance lock on Windows and Linux where it's needed for deep links

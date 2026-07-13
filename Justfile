@@ -85,6 +85,48 @@ run-ui:
     @echo "Running UI..."
     cd ui/desktop && pnpm install && pnpm run start-gui
 
+# Small backend for provider and desktop-UI development. It omits Goose's V8 code-mode runtime.
+dev-binary:
+    cargo build -p goose-cli --bin goose --no-default-features --features rustls-tls,system-keyring
+
+# Full local backend when testing Goose code mode as well as the provider integrations.
+dev-binary-full:
+    cargo build -p goose-cli --bin goose --no-default-features --features code-mode,rustls-tls,system-keyring
+
+# Fast local desktop loop: debug Rust build plus Vite hot reload, with no packaging.
+dev-ui: dev-binary
+    cd ui/desktop && GOOSE_BINARY=../../target/debug/goose pnpm exec electron-forge start
+
+# Full-capability desktop loop; slower only when Rust dependencies need rebuilding.
+dev-ui-full: dev-binary-full
+    cd ui/desktop && GOOSE_BINARY=../../target/debug/goose pnpm exec electron-forge start
+
+# UI-only loop after dev-binary has been built once.
+dev-ui-fast:
+    @test -x target/debug/goose || (echo "Run 'just dev-binary' first" && exit 1)
+    cd ui/desktop && GOOSE_BINARY=../../target/debug/goose pnpm exec electron-forge start
+
+# Decoupled backend for Rust work; the Electron app can remain open while this restarts.
+dev-server: dev-binary
+    GOOSE_SERVER__SECRET_KEY="${GOOSE_SERVER__SECRET_KEY:-goose-dev}" ./target/debug/goose serve --platform desktop --host 127.0.0.1 --port 3000
+
+dev-server-full: dev-binary-full
+    GOOSE_SERVER__SECRET_KEY="${GOOSE_SERVER__SECRET_KEY:-goose-dev}" ./target/debug/goose serve --platform desktop --host 127.0.0.1 --port 3000
+
+# Pair with dev-server for a frontend that survives backend rebuilds/restarts.
+dev-ui-external:
+    cd ui/desktop && GOOSE_EXTERNAL_BACKEND=true GOOSE_SERVER__SECRET_KEY="${GOOSE_SERVER__SECRET_KEY:-goose-dev}" pnpm exec electron-forge start
+
+# Quick validation gates used during development; packaging remains a release checkpoint.
+dev-check-ui:
+    cd ui/desktop && pnpm run typecheck
+
+dev-check-rust:
+    cargo check -p goose-cli --bin goose --no-default-features --features rustls-tls,system-keyring
+
+dev-check-rust-full:
+    cargo check -p goose-cli --bin goose --no-default-features --features code-mode,rustls-tls,system-keyring
+
 run-ui-playwright:
     #!/usr/bin/env sh
     just release-binary

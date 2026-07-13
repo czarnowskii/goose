@@ -4,7 +4,6 @@ use std::sync::{Arc, RwLock};
 use super::{
     antigravity::AntigravityProvider,
     base::{Provider, ProviderMetadata},
-    chatgpt_codex::ChatGptCodexProvider,
     claude_acp::ClaudeAcpProvider,
     codex::CodexProvider,
     provider_registry::ProviderRegistry,
@@ -27,10 +26,6 @@ async fn init_registry() -> RwLock<ProviderRegistry> {
     let mut registry = ProviderRegistry::new(tls_config).with_providers(|registry| {
         use super::inventory::registrations;
 
-        registry.register_with_inventory::<ChatGptCodexProvider>(
-            true,
-            Some(registrations::chatgpt_codex_inventory()),
-        );
         registry.register_with_inventory::<ClaudeAcpProvider>(
             true,
             Some(registrations::claude_acp_inventory()),
@@ -38,11 +33,6 @@ async fn init_registry() -> RwLock<ProviderRegistry> {
         registry.register::<CodexProvider>(true);
         registry.register::<AntigravityProvider>(true);
     });
-    // Register cleanup functions for providers with cached state
-    registry.set_cleanup(
-        "chatgpt_codex",
-        Arc::new(|| Box::pin(ChatGptCodexProvider::cleanup())),
-    );
 
     if let Err(e) = load_custom_providers_into_registry(&mut registry) {
         tracing::warn!("Failed to load custom providers: {}", e);
@@ -152,11 +142,17 @@ mod tests {
             .map(|(metadata, _)| metadata.name)
             .collect::<std::collections::HashSet<_>>();
 
-        for expected in ["chatgpt_codex", "codex", "claude-acp", "antigravity"] {
+        for expected in ["codex", "claude-acp", "antigravity"] {
             assert!(provider_names.contains(expected), "missing {expected}");
         }
 
-        for excluded in ["openai", "anthropic", "gemini-cli", "ollama"] {
+        for excluded in [
+            "chatgpt_codex",
+            "openai",
+            "anthropic",
+            "gemini-cli",
+            "ollama",
+        ] {
             assert!(!provider_names.contains(excluded), "unexpected {excluded}");
         }
     }

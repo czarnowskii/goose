@@ -4,6 +4,7 @@ use base64::{engine::general_purpose::STANDARD as BASE64, Engine as _};
 use futures::future::BoxFuture;
 use goose_providers::conversation::token_usage::{ProviderUsage, Usage};
 use goose_providers::thinking::ThinkingEffort;
+use serde::Deserialize;
 use serde_json::json;
 use std::collections::HashMap;
 use std::io::Write;
@@ -28,8 +29,14 @@ use rmcp::model::Tool;
 
 const CODEX_PROVIDER_NAME: &str = "codex";
 pub const CODEX_DEFAULT_MODEL: &str = "gpt-5.6-sol";
-pub const CODEX_KNOWN_MODELS: &[&str] =
-    &["gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna", "gpt-5.6"];
+pub const CODEX_KNOWN_MODELS: &[&str] = &[
+    "gpt-5.6-sol",
+    "gpt-5.6-terra",
+    "gpt-5.6-luna",
+    "gpt-5.5",
+    "gpt-5.4",
+    "gpt-5.4-mini",
+];
 pub const CODEX_DOC_URL: &str = "https://developers.openai.com/codex/cli";
 
 /// Valid reasoning effort levels for Codex
@@ -52,7 +59,34 @@ pub struct CodexProvider {
     mode_by_session: tokio::sync::RwLock<HashMap<String, GooseMode>>,
 }
 
+#[derive(Deserialize)]
+struct CodexModelCache {
+    models: Vec<CodexCachedModel>,
+}
+
+#[derive(Deserialize)]
+struct CodexCachedModel {
+    slug: String,
+    visibility: String,
+}
+
 impl CodexProvider {
+    fn cached_models() -> Option<Vec<String>> {
+        let codex_home = std::env::var_os("CODEX_HOME")
+            .map(PathBuf::from)
+            .or_else(|| dirs::home_dir().map(|home| home.join(".codex")))?;
+        let cache = std::fs::read_to_string(codex_home.join("models_cache.json")).ok()?;
+        let cache: CodexModelCache = serde_json::from_str(&cache).ok()?;
+        let models = cache
+            .models
+            .into_iter()
+            .filter(|model| model.visibility == "list")
+            .map(|model| model.slug)
+            .collect::<Vec<_>>();
+
+        (!models.is_empty()).then_some(models)
+    }
+
     fn legacy_reasoning_effort() -> Option<ThinkingEffort> {
         Config::global()
             .get_param::<String>("CODEX_REASONING_EFFORT")
@@ -741,7 +775,12 @@ impl Provider for CodexProvider {
     }
 
     async fn fetch_supported_models(&self) -> Result<Vec<String>, ProviderError> {
-        Ok(CODEX_KNOWN_MODELS.iter().map(|s| s.to_string()).collect())
+        Ok(Self::cached_models().unwrap_or_else(|| {
+            CODEX_KNOWN_MODELS
+                .iter()
+                .map(|model| model.to_string())
+                .collect()
+        }))
     }
 }
 
@@ -1019,7 +1058,36 @@ mod tests {
     fn test_known_models() {
         assert_eq!(
             CODEX_KNOWN_MODELS,
-            &["gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna", "gpt-5.6"]
+            &[
+                "gpt-5.6-sol",
+                "gpt-5.6-terra",
+                "gpt-5.6-luna",
+                "gpt-5.5",
+                "gpt-5.4",
+                "gpt-5.4-mini"
+            ]
+        );
+    }
+
+    #[test]
+    fn test_cached_models_filters_hidden_entries() {
+        let _guard = env_lock::lock_env([("CODEX_HOME", None::<&str>)]);
+        let temp_dir = tempfile::tempdir().unwrap();
+        std::env::set_var("CODEX_HOME", temp_dir.path());
+        std::fs::write(
+            temp_dir.path().join("models_cache.json"),
+            r#"{
+                "models": [
+                    {"slug": "gpt-visible", "visibility": "list"},
+                    {"slug": "gpt-hidden", "visibility": "hide"}
+                ]
+            }"#,
+        )
+        .unwrap();
+
+        assert_eq!(
+            CodexProvider::cached_models(),
+            Some(vec!["gpt-visible".to_string()])
         );
     }
 

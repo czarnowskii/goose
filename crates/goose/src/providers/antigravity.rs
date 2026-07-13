@@ -28,6 +28,8 @@ pub const ANTIGRAVITY_KNOWN_MODELS: &[&str] = &[
     "Gemini 3.1 Pro (High)",
     "Gemini 3.1 Pro (Low)",
     "Claude Opus 4.6 (Thinking)",
+    "Claude Sonnet 4.6 (Thinking)",
+    "GPT-OSS 120B (Medium)",
 ];
 pub const ANTIGRAVITY_DOC_URL: &str = "https://antigravity.google/docs";
 
@@ -153,6 +155,49 @@ impl AntigravityProvider {
 
         Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
     }
+
+    async fn fetch_models_from_cli(&self) -> Result<Vec<String>, ProviderError> {
+        let mut cmd = Command::new(&self.command);
+        configure_subprocess(&mut cmd);
+        cmd.arg("models")
+            .current_dir(&self.working_dir)
+            .stdin(Stdio::null())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped());
+
+        if let Ok(path) = SearchPaths::builder().with_npm().path() {
+            cmd.env("PATH", path);
+        }
+
+        let output = cmd.output().await.map_err(|error| {
+            ProviderError::RequestFailed(format!(
+                "Failed to query Antigravity models from '{}': {error}",
+                self.command.display()
+            ))
+        })?;
+
+        if !output.status.success() {
+            let detail = String::from_utf8_lossy(&output.stderr).trim().to_string();
+            return Err(ProviderError::RequestFailed(format!(
+                "Antigravity model query failed: {detail}"
+            )));
+        }
+
+        let models = String::from_utf8_lossy(&output.stdout)
+            .lines()
+            .map(str::trim)
+            .filter(|line| !line.is_empty())
+            .map(str::to_string)
+            .collect::<Vec<_>>();
+
+        if models.is_empty() {
+            return Err(ProviderError::RequestFailed(
+                "Antigravity returned an empty model list".to_string(),
+            ));
+        }
+
+        Ok(models)
+    }
 }
 
 impl goose_providers::base::ProviderDescriptor for AntigravityProvider {
@@ -201,10 +246,12 @@ impl Provider for AntigravityProvider {
     }
 
     async fn fetch_supported_models(&self) -> Result<Vec<String>, ProviderError> {
-        Ok(ANTIGRAVITY_KNOWN_MODELS
-            .iter()
-            .map(|s| s.to_string())
-            .collect())
+        self.fetch_models_from_cli().await.or_else(|_| {
+            Ok(ANTIGRAVITY_KNOWN_MODELS
+                .iter()
+                .map(|model| model.to_string())
+                .collect())
+        })
     }
 
     fn skip_canonical_filtering(&self) -> bool {
