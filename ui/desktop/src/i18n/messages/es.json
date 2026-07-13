@@ -2303,20 +2303,11 @@
   "modelSettingsPanel.topP": {
     "defaultMessage": "Top P"
   },
-  "modelsBottomBar.changeModel": {
-    "defaultMessage": "Cambiar modelo"
-  },
   "modelsBottomBar.currentModel": {
     "defaultMessage": "Modelo actual"
   },
   "modelsBottomBar.loadingModel": {
     "defaultMessage": "Cargando modelo..."
-  },
-  "modelsBottomBar.localModelSettings": {
-    "defaultMessage": "Ajustes del modelo local"
-  },
-  "modelsBottomBar.localModelSettingsTitle": {
-    "defaultMessage": "Ajustes del modelo local — {modelName}"
   },
   "modelsBottomBar.resolvedModel": {
     "defaultMessage": "Modelo resuelto"
@@ -4585,5 +4576,26 @@
   },
   "userMessage.forkSessionTitle": {
     "defaultMessage": "Crear una nueva sesión con el mensaje editado"
+  },
+  "modelsBottomBar.loadingModels": {
+    "defaultMessage": "Loading models…"
+  },
+  "modelsBottomBar.model": {
+    "defaultMessage": "Model"
+  },
+  "modelsBottomBar.modelLoadFailed": {
+    "defaultMessage": "Could not load models."
+  },
+  "modelsBottomBar.noModels": {
+    "defaultMessage": "No models available for this provider."
+  },
+  "modelsBottomBar.provider": {
+    "defaultMessage": "Provider"
+  },
+  "modelsBottomBar.reasoningEffort": {
+    "defaultMessage": "Reasoning effort"
+  },
+  "modelsBottomBar.useModel": {
+    "defaultMessage": "Use model"
   }
 }

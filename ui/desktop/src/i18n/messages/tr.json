@@ -2303,20 +2303,11 @@
   "modelSettingsPanel.topP": {
     "defaultMessage": "Üst P"
   },
-  "modelsBottomBar.changeModel": {
-    "defaultMessage": "Modeli Değiştir"
-  },
   "modelsBottomBar.currentModel": {
     "defaultMessage": "Mevcut model"
   },
   "modelsBottomBar.loadingModel": {
     "defaultMessage": "Model yükleniyor..."
-  },
-  "modelsBottomBar.localModelSettings": {
-    "defaultMessage": "Yerel Model Ayarları"
-  },
-  "modelsBottomBar.localModelSettingsTitle": {
-    "defaultMessage": "Yerel Model Ayarları — {modelName}"
   },
   "modelsBottomBar.resolvedModel": {
     "defaultMessage": "Çözümlenen model"
@@ -4585,5 +4576,26 @@
   },
   "userMessage.forkSessionTitle": {
     "defaultMessage": "Düzenlenen mesajla yeni bir oturum oluşturun"
+  },
+  "modelsBottomBar.loadingModels": {
+    "defaultMessage": "Loading models…"
+  },
+  "modelsBottomBar.model": {
+    "defaultMessage": "Model"
+  },
+  "modelsBottomBar.modelLoadFailed": {
+    "defaultMessage": "Could not load models."
+  },
+  "modelsBottomBar.noModels": {
+    "defaultMessage": "No models available for this provider."
+  },
+  "modelsBottomBar.provider": {
+    "defaultMessage": "Provider"
+  },
+  "modelsBottomBar.reasoningEffort": {
+    "defaultMessage": "Reasoning effort"
+  },
+  "modelsBottomBar.useModel": {
+    "defaultMessage": "Use model"
   }
 }

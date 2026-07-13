@@ -2303,20 +2303,11 @@
   "modelSettingsPanel.topP": {
     "defaultMessage": "Top P"
   },
-  "modelsBottomBar.changeModel": {
-    "defaultMessage": "Tukar Model"
-  },
   "modelsBottomBar.currentModel": {
     "defaultMessage": "Model semasa"
   },
   "modelsBottomBar.loadingModel": {
     "defaultMessage": "Memuatkan model..."
-  },
-  "modelsBottomBar.localModelSettings": {
-    "defaultMessage": "Tetapan Model Tempatan"
-  },
-  "modelsBottomBar.localModelSettingsTitle": {
-    "defaultMessage": "Tetapan Model Tempatan — {modelName}"
   },
   "modelsBottomBar.resolvedModel": {
     "defaultMessage": "Model diselesaikan"
@@ -4585,5 +4576,26 @@
   },
   "userMessage.forkSessionTitle": {
     "defaultMessage": "Cipta sesi baharu dengan mesej yang disunting"
+  },
+  "modelsBottomBar.loadingModels": {
+    "defaultMessage": "Loading models…"
+  },
+  "modelsBottomBar.model": {
+    "defaultMessage": "Model"
+  },
+  "modelsBottomBar.modelLoadFailed": {
+    "defaultMessage": "Could not load models."
+  },
+  "modelsBottomBar.noModels": {
+    "defaultMessage": "No models available for this provider."
+  },
+  "modelsBottomBar.provider": {
+    "defaultMessage": "Provider"
+  },
+  "modelsBottomBar.reasoningEffort": {
+    "defaultMessage": "Reasoning effort"
+  },
+  "modelsBottomBar.useModel": {
+    "defaultMessage": "Use model"
   }
 }

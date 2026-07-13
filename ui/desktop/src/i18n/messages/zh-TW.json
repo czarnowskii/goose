@@ -2303,20 +2303,11 @@
   "modelSettingsPanel.topP": {
     "defaultMessage": "Top P"
   },
-  "modelsBottomBar.changeModel": {
-    "defaultMessage": "變更模型"
-  },
   "modelsBottomBar.currentModel": {
     "defaultMessage": "目前模型"
   },
   "modelsBottomBar.loadingModel": {
     "defaultMessage": "正在載入模型…"
-  },
-  "modelsBottomBar.localModelSettings": {
-    "defaultMessage": "本機模型設定"
-  },
-  "modelsBottomBar.localModelSettingsTitle": {
-    "defaultMessage": "本機模型設定 — {modelName}"
   },
   "modelsBottomBar.resolvedModel": {
     "defaultMessage": "已解析的模型"
@@ -4585,5 +4576,26 @@
   },
   "userMessage.forkSessionTitle": {
     "defaultMessage": "以編輯後的訊息建立新的工作階段"
+  },
+  "modelsBottomBar.loadingModels": {
+    "defaultMessage": "Loading models…"
+  },
+  "modelsBottomBar.model": {
+    "defaultMessage": "Model"
+  },
+  "modelsBottomBar.modelLoadFailed": {
+    "defaultMessage": "Could not load models."
+  },
+  "modelsBottomBar.noModels": {
+    "defaultMessage": "No models available for this provider."
+  },
+  "modelsBottomBar.provider": {
+    "defaultMessage": "Provider"
+  },
+  "modelsBottomBar.reasoningEffort": {
+    "defaultMessage": "Reasoning effort"
+  },
+  "modelsBottomBar.useModel": {
+    "defaultMessage": "Use model"
   }
 }

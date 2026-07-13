@@ -2303,20 +2303,11 @@
   "modelSettingsPanel.topP": {
     "defaultMessage": "Top P"
   },
-  "modelsBottomBar.changeModel": {
-    "defaultMessage": "Изменить модель"
-  },
   "modelsBottomBar.currentModel": {
     "defaultMessage": "Текущая модель"
   },
   "modelsBottomBar.loadingModel": {
     "defaultMessage": "Загрузка модели..."
-  },
-  "modelsBottomBar.localModelSettings": {
-    "defaultMessage": "Настройки локальной модели"
-  },
-  "modelsBottomBar.localModelSettingsTitle": {
-    "defaultMessage": "Настройки локальной модели — {modelName}"
   },
   "modelsBottomBar.resolvedModel": {
     "defaultMessage": "Разрешенная модель"
@@ -4585,5 +4576,26 @@
   },
   "userMessage.forkSessionTitle": {
     "defaultMessage": "Создать новый сеанс с измененным сообщением"
+  },
+  "modelsBottomBar.loadingModels": {
+    "defaultMessage": "Loading models…"
+  },
+  "modelsBottomBar.model": {
+    "defaultMessage": "Model"
+  },
+  "modelsBottomBar.modelLoadFailed": {
+    "defaultMessage": "Could not load models."
+  },
+  "modelsBottomBar.noModels": {
+    "defaultMessage": "No models available for this provider."
+  },
+  "modelsBottomBar.provider": {
+    "defaultMessage": "Provider"
+  },
+  "modelsBottomBar.reasoningEffort": {
+    "defaultMessage": "Reasoning effort"
+  },
+  "modelsBottomBar.useModel": {
+    "defaultMessage": "Use model"
   }
 }

@@ -2303,26 +2303,38 @@
   "modelSettingsPanel.topP": {
     "defaultMessage": "Top P"
   },
-  "modelsBottomBar.changeModel": {
-    "defaultMessage": "Change Model"
-  },
   "modelsBottomBar.currentModel": {
     "defaultMessage": "Current model"
   },
   "modelsBottomBar.loadingModel": {
     "defaultMessage": "Loading model..."
   },
-  "modelsBottomBar.localModelSettings": {
-    "defaultMessage": "Local Model Settings"
+  "modelsBottomBar.loadingModels": {
+    "defaultMessage": "Loading models…"
   },
-  "modelsBottomBar.localModelSettingsTitle": {
-    "defaultMessage": "Local Model Settings — {modelName}"
+  "modelsBottomBar.model": {
+    "defaultMessage": "Model"
+  },
+  "modelsBottomBar.modelLoadFailed": {
+    "defaultMessage": "Could not load models."
+  },
+  "modelsBottomBar.noModels": {
+    "defaultMessage": "No models available for this provider."
+  },
+  "modelsBottomBar.provider": {
+    "defaultMessage": "Provider"
+  },
+  "modelsBottomBar.reasoningEffort": {
+    "defaultMessage": "Reasoning effort"
   },
   "modelsBottomBar.resolvedModel": {
     "defaultMessage": "Resolved model"
   },
   "modelsBottomBar.selectModel": {
     "defaultMessage": "Select Model"
+  },
+  "modelsBottomBar.useModel": {
+    "defaultMessage": "Use model"
   },
   "modelsSection.resetDescription": {
     "defaultMessage": "Clear your selected model and provider settings to start fresh"

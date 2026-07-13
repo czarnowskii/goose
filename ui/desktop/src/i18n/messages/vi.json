@@ -2303,20 +2303,11 @@
   "modelSettingsPanel.topP": {
     "defaultMessage": "Top P"
   },
-  "modelsBottomBar.changeModel": {
-    "defaultMessage": "Thay đổi mô hình"
-  },
   "modelsBottomBar.currentModel": {
     "defaultMessage": "Mô hình hiện tại"
   },
   "modelsBottomBar.loadingModel": {
     "defaultMessage": "Đang tải mô hình..."
-  },
-  "modelsBottomBar.localModelSettings": {
-    "defaultMessage": "Cài đặt mô hình cục bộ"
-  },
-  "modelsBottomBar.localModelSettingsTitle": {
-    "defaultMessage": "Cài đặt mô hình cục bộ — {modelName}"
   },
   "modelsBottomBar.resolvedModel": {
     "defaultMessage": "Mô hình đã phân giải"
@@ -4585,5 +4576,26 @@
   },
   "userMessage.forkSessionTitle": {
     "defaultMessage": "Tạo một phiên làm việc mới với tin nhắn đã chỉnh sửa"
+  },
+  "modelsBottomBar.loadingModels": {
+    "defaultMessage": "Loading models…"
+  },
+  "modelsBottomBar.model": {
+    "defaultMessage": "Model"
+  },
+  "modelsBottomBar.modelLoadFailed": {
+    "defaultMessage": "Could not load models."
+  },
+  "modelsBottomBar.noModels": {
+    "defaultMessage": "No models available for this provider."
+  },
+  "modelsBottomBar.provider": {
+    "defaultMessage": "Provider"
+  },
+  "modelsBottomBar.reasoningEffort": {
+    "defaultMessage": "Reasoning effort"
+  },
+  "modelsBottomBar.useModel": {
+    "defaultMessage": "Use model"
   }
 }

@@ -2303,20 +2303,11 @@
   "modelSettingsPanel.topP": {
     "defaultMessage": "Top P"
   },
-  "modelsBottomBar.changeModel": {
-    "defaultMessage": "モデルを変更"
-  },
   "modelsBottomBar.currentModel": {
     "defaultMessage": "現在のモデル"
   },
   "modelsBottomBar.loadingModel": {
     "defaultMessage": "モデルを読み込み中..."
-  },
-  "modelsBottomBar.localModelSettings": {
-    "defaultMessage": "ローカルモデル設定"
-  },
-  "modelsBottomBar.localModelSettingsTitle": {
-    "defaultMessage": "ローカルモデル設定 — {modelName}"
   },
   "modelsBottomBar.resolvedModel": {
     "defaultMessage": "解決済みモデル"
@@ -4585,5 +4576,26 @@
   },
   "userMessage.forkSessionTitle": {
     "defaultMessage": "編集したメッセージで新しいセッションを作成"
+  },
+  "modelsBottomBar.loadingModels": {
+    "defaultMessage": "Loading models…"
+  },
+  "modelsBottomBar.model": {
+    "defaultMessage": "Model"
+  },
+  "modelsBottomBar.modelLoadFailed": {
+    "defaultMessage": "Could not load models."
+  },
+  "modelsBottomBar.noModels": {
+    "defaultMessage": "No models available for this provider."
+  },
+  "modelsBottomBar.provider": {
+    "defaultMessage": "Provider"
+  },
+  "modelsBottomBar.reasoningEffort": {
+    "defaultMessage": "Reasoning effort"
+  },
+  "modelsBottomBar.useModel": {
+    "defaultMessage": "Use model"
   }
 }

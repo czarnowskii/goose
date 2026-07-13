@@ -2303,20 +2303,11 @@
   "modelSettingsPanel.topP": {
     "defaultMessage": "Top P"
   },
-  "modelsBottomBar.changeModel": {
-    "defaultMessage": "모델 변경"
-  },
   "modelsBottomBar.currentModel": {
     "defaultMessage": "현재 모델"
   },
   "modelsBottomBar.loadingModel": {
     "defaultMessage": "모델 로드 중..."
-  },
-  "modelsBottomBar.localModelSettings": {
-    "defaultMessage": "로컬 모델 설정"
-  },
-  "modelsBottomBar.localModelSettingsTitle": {
-    "defaultMessage": "로컬 모델 설정 — {modelName}"
   },
   "modelsBottomBar.resolvedModel": {
     "defaultMessage": "확인된 모델"
@@ -4585,5 +4576,26 @@
   },
   "userMessage.forkSessionTitle": {
     "defaultMessage": "편집한 메시지로 새 세션 만들기"
+  },
+  "modelsBottomBar.loadingModels": {
+    "defaultMessage": "Loading models…"
+  },
+  "modelsBottomBar.model": {
+    "defaultMessage": "Model"
+  },
+  "modelsBottomBar.modelLoadFailed": {
+    "defaultMessage": "Could not load models."
+  },
+  "modelsBottomBar.noModels": {
+    "defaultMessage": "No models available for this provider."
+  },
+  "modelsBottomBar.provider": {
+    "defaultMessage": "Provider"
+  },
+  "modelsBottomBar.reasoningEffort": {
+    "defaultMessage": "Reasoning effort"
+  },
+  "modelsBottomBar.useModel": {
+    "defaultMessage": "Use model"
   }
 }

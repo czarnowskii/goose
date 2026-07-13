@@ -2303,20 +2303,11 @@
   "modelSettingsPanel.topP": {
     "defaultMessage": "Top P"
   },
-  "modelsBottomBar.changeModel": {
-    "defaultMessage": "切换模型"
-  },
   "modelsBottomBar.currentModel": {
     "defaultMessage": "当前模型"
   },
   "modelsBottomBar.loadingModel": {
     "defaultMessage": "正在加载模型…"
-  },
-  "modelsBottomBar.localModelSettings": {
-    "defaultMessage": "本地模型设置"
-  },
-  "modelsBottomBar.localModelSettingsTitle": {
-    "defaultMessage": "本地模型设置 — {modelName}"
   },
   "modelsBottomBar.resolvedModel": {
     "defaultMessage": "解析后的模型"
@@ -4585,5 +4576,26 @@
   },
   "userMessage.forkSessionTitle": {
     "defaultMessage": "用编辑过的消息创建新会话"
+  },
+  "modelsBottomBar.loadingModels": {
+    "defaultMessage": "Loading models…"
+  },
+  "modelsBottomBar.model": {
+    "defaultMessage": "Model"
+  },
+  "modelsBottomBar.modelLoadFailed": {
+    "defaultMessage": "Could not load models."
+  },
+  "modelsBottomBar.noModels": {
+    "defaultMessage": "No models available for this provider."
+  },
+  "modelsBottomBar.provider": {
+    "defaultMessage": "Provider"
+  },
+  "modelsBottomBar.reasoningEffort": {
+    "defaultMessage": "Reasoning effort"
+  },
+  "modelsBottomBar.useModel": {
+    "defaultMessage": "Use model"
   }
 }

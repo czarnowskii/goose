@@ -2303,20 +2303,11 @@
   "modelSettingsPanel.topP": {
     "defaultMessage": "शीर्ष पी"
   },
-  "modelsBottomBar.changeModel": {
-    "defaultMessage": "मॉडल बदलें"
-  },
   "modelsBottomBar.currentModel": {
     "defaultMessage": "वर्तमान मॉडल"
   },
   "modelsBottomBar.loadingModel": {
     "defaultMessage": "मॉडल लोड हो रहा है..."
-  },
-  "modelsBottomBar.localModelSettings": {
-    "defaultMessage": "स्थानीय मॉडल Settings"
-  },
-  "modelsBottomBar.localModelSettingsTitle": {
-    "defaultMessage": "स्थानीय मॉडल Settings — {modelName}"
   },
   "modelsBottomBar.resolvedModel": {
     "defaultMessage": "हल किया गया मॉडल"
@@ -4585,5 +4576,26 @@
   },
   "userMessage.forkSessionTitle": {
     "defaultMessage": "संपादित संदेश के साथ एक नया सत्र बनाएं"
+  },
+  "modelsBottomBar.loadingModels": {
+    "defaultMessage": "Loading models…"
+  },
+  "modelsBottomBar.model": {
+    "defaultMessage": "Model"
+  },
+  "modelsBottomBar.modelLoadFailed": {
+    "defaultMessage": "Could not load models."
+  },
+  "modelsBottomBar.noModels": {
+    "defaultMessage": "No models available for this provider."
+  },
+  "modelsBottomBar.provider": {
+    "defaultMessage": "Provider"
+  },
+  "modelsBottomBar.reasoningEffort": {
+    "defaultMessage": "Reasoning effort"
+  },
+  "modelsBottomBar.useModel": {
+    "defaultMessage": "Use model"
   }
 }
