@@ -28,18 +28,8 @@ use rmcp::model::Tool;
 
 const CODEX_PROVIDER_NAME: &str = "codex";
 pub const CODEX_DEFAULT_MODEL: &str = "gpt-5.6-sol";
-pub const CODEX_KNOWN_MODELS: &[&str] = &[
-    "gpt-5.6-sol",
-    "gpt-5.6-terra",
-    "gpt-5.6-luna",
-    "gpt-5.6",
-    "gpt-5.5",
-    "gpt-5.4",
-    "gpt-5.2-codex",
-    "gpt-5.2",
-    "gpt-5.1-codex-max",
-    "gpt-5.1-codex-mini",
-];
+pub const CODEX_KNOWN_MODELS: &[&str] =
+    &["gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna", "gpt-5.6"];
 pub const CODEX_DOC_URL: &str = "https://developers.openai.com/codex/cli";
 
 /// Valid reasoning effort levels for Codex
@@ -1027,10 +1017,10 @@ mod tests {
 
     #[test]
     fn test_known_models() {
-        assert!(CODEX_KNOWN_MODELS.contains(&"gpt-5.2-codex"));
-        assert!(CODEX_KNOWN_MODELS.contains(&"gpt-5.2"));
-        assert!(CODEX_KNOWN_MODELS.contains(&"gpt-5.1-codex-max"));
-        assert!(CODEX_KNOWN_MODELS.contains(&"gpt-5.1-codex-mini"));
+        assert_eq!(
+            CODEX_KNOWN_MODELS,
+            &["gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna", "gpt-5.6"]
+        );
     }
 
     #[test]

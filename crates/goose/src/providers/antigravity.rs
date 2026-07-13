@@ -28,8 +28,6 @@ pub const ANTIGRAVITY_KNOWN_MODELS: &[&str] = &[
     "Gemini 3.1 Pro (High)",
     "Gemini 3.1 Pro (Low)",
     "Claude Opus 4.6 (Thinking)",
-    "Claude Sonnet 4.6 (Thinking)",
-    "GPT-OSS 120B (Medium)",
 ];
 pub const ANTIGRAVITY_DOC_URL: &str = "https://antigravity.google/docs";
 
@@ -253,14 +251,14 @@ mod tests {
         let metadata = AntigravityProvider::metadata();
         assert_eq!(metadata.name, "antigravity");
         assert_eq!(metadata.default_model, "Gemini 3.5 Flash (Medium)");
-        assert!(metadata
-            .known_models
-            .iter()
-            .any(|model| model.name == "Claude Opus 4.6 (Thinking)"));
-        assert!(metadata
-            .known_models
-            .iter()
-            .any(|model| model.name == "Gemini 3.5 Flash (High)"));
+        assert_eq!(
+            metadata
+                .known_models
+                .iter()
+                .map(|model| model.name.as_str())
+                .collect::<Vec<_>>(),
+            ANTIGRAVITY_KNOWN_MODELS
+        );
     }
 
     #[test]

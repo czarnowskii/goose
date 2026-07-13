@@ -145,6 +145,23 @@ mod tests {
     use std::fs;
 
     #[tokio::test]
+    async fn built_in_provider_list_is_limited_to_user_subscriptions() {
+        let provider_names = providers()
+            .await
+            .into_iter()
+            .map(|(metadata, _)| metadata.name)
+            .collect::<std::collections::HashSet<_>>();
+
+        for expected in ["chatgpt_codex", "codex", "claude-acp", "antigravity"] {
+            assert!(provider_names.contains(expected), "missing {expected}");
+        }
+
+        for excluded in ["openai", "anthropic", "gemini-cli", "ollama"] {
+            assert!(!provider_names.contains(excluded), "unexpected {excluded}");
+        }
+    }
+
+    #[tokio::test]
     async fn test_huggingface_provider_registry_wiring() {
         let huggingface = get_from_registry("huggingface")
             .await

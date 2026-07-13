@@ -68,14 +68,6 @@ pub const CHATGPT_CODEX_KNOWN_MODELS: &[ChatGptCodexModelAttrs] = &[
         name: "gpt-5.6",
         reasoning_levels: &["none", "low", "medium", "high", "xhigh"],
     },
-    ChatGptCodexModelAttrs {
-        name: "gpt-5.5",
-        reasoning_levels: &["low", "medium", "high", "xhigh"],
-    },
-    ChatGptCodexModelAttrs {
-        name: "gpt-5.4",
-        reasoning_levels: &["low", "medium", "high", "xhigh"],
-    },
 ];
 
 const CHATGPT_CODEX_DOC_URL: &str = "https://openai.com/chatgpt";
@@ -1410,10 +1402,10 @@ mod tests {
     fn test_known_model_names_include_gpt_5_6_models() {
         let names = known_model_names();
 
-        assert!(names.contains(&"gpt-5.6-sol"));
-        assert!(names.contains(&"gpt-5.6-terra"));
-        assert!(names.contains(&"gpt-5.6-luna"));
-        assert!(names.contains(&"gpt-5.6"));
+        assert_eq!(
+            names,
+            vec!["gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna", "gpt-5.6"]
+        );
     }
 
     #[test]
