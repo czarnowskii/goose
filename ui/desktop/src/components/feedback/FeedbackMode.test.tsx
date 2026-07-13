@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { FeedbackListResult } from '../../types/feedback';
-import { FeedbackMode } from './FeedbackMode';
+import { FeedbackMode, getFeedbackComposerPosition } from './FeedbackMode';
 
 const feedbackResult: FeedbackListResult = {
   storePath: '/tmp/feedback/feedback.json',
@@ -34,6 +34,8 @@ const feedbackResult: FeedbackListResult = {
 
 describe('FeedbackMode', () => {
   beforeEach(() => {
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1200 });
+    Object.defineProperty(window, 'innerHeight', { configurable: true, value: 800 });
     Object.assign(window.electron, {
       listFeedback: vi.fn(() => Promise.resolve(feedbackResult)),
       createFeedback: vi.fn(),
@@ -50,5 +52,48 @@ describe('FeedbackMode', () => {
     expect(screen.getByText('1 unresolved comment')).toBeVisible();
     expect(screen.getByText('Only show our configured providers.')).toBeVisible();
     await waitFor(() => expect(window.electron.listFeedback).toHaveBeenCalledOnce());
+  });
+
+  it('opens a floating composer beside the selected component', async () => {
+    const { getByTestId } = render(
+      <>
+        <button data-testid="target" data-feedback-id="model-list">
+          Model list
+        </button>
+        <FeedbackMode />
+      </>
+    );
+    const target = getByTestId('target');
+    target.getBoundingClientRect = vi.fn(
+      () =>
+        ({
+          x: 100,
+          y: 180,
+          left: 100,
+          top: 180,
+          right: 300,
+          bottom: 220,
+          width: 200,
+          height: 40,
+          toJSON: () => ({}),
+        }) as globalThis.DOMRect
+    );
+
+    fireEvent.keyDown(window, { key: 'f', metaKey: true, shiftKey: true });
+    fireEvent.click(target);
+
+    const composer = await screen.findByRole('dialog', { name: 'Add feedback' });
+    expect(composer).toBeVisible();
+    expect(composer).toHaveStyle({ left: '312px', top: '180px' });
+    expect(screen.getByPlaceholderText('What should change?')).toHaveFocus();
+  });
+});
+
+describe('getFeedbackComposerPosition', () => {
+  it('moves the composer to the left when the side panel blocks the right', () => {
+    const target = feedbackResult.comments[0].target;
+    target.rect = { x: 700, y: 760, width: 100, height: 40 };
+
+    expect(getFeedbackComposerPosition(target, 1200, 800)).toEqual({ left: 348, top: 558 });
   });
 });
