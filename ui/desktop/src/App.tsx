@@ -58,7 +58,7 @@ import { usePageViewTracking } from './hooks/useAnalytics';
 import { trackErrorWithContext } from './utils/analytics';
 import { AppEvents } from './constants/events';
 import { registerPlatformEventHandlers } from './utils/platform_events';
-import { FeedbackMode } from './components/feedback/FeedbackMode';
+import { FeedbackMode, FEEDBACK_PANEL_WIDTH } from './components/feedback/FeedbackMode';
 
 function PageViewTracker() {
   usePageViewTracking();
@@ -306,6 +306,7 @@ const ExtensionsRoute = () => {
 };
 
 export function AppInner() {
+  const [feedbackModeActive, setFeedbackModeActive] = useState(false);
   const [fatalError, setFatalError] = useState<string | null>(null);
 
   const nostrImportInFlight = useRef<string | null>(null);
@@ -620,7 +621,12 @@ export function AppInner() {
       />
       <ExtensionInstallModal addExtension={addExtension} setView={setView} />
       <RecipeParamsModalContainer />
-      <div className="relative w-screen h-screen overflow-hidden bg-background-secondary flex flex-col">
+      <div
+        className="relative h-screen overflow-hidden bg-background-secondary flex flex-col transition-[width] duration-200 ease-out"
+        style={{
+          width: feedbackModeActive ? `calc(100vw - ${FEEDBACK_PANEL_WIDTH}px)` : '100vw',
+        }}
+      >
         <div className="titlebar-drag-region" />
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <Routes>
@@ -666,7 +672,7 @@ export function AppInner() {
           </Routes>
         </div>
       </div>
-      <FeedbackMode />
+      <FeedbackMode onActiveChange={setFeedbackModeActive} />
     </>
   );
 }

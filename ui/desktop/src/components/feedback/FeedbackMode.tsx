@@ -13,7 +13,7 @@ function targetLabel(target: FeedbackTarget): string {
   return target.feedbackId || target.ariaLabel || target.selector;
 }
 
-const feedbackPanelWidth = 380;
+export const FEEDBACK_PANEL_WIDTH = 285;
 const composerWidth = 340;
 const composerHeight = 230;
 const composerGap = 12;
@@ -24,7 +24,7 @@ export function getFeedbackComposerPosition(
   viewportWidth: number,
   viewportHeight: number
 ): { left: number; top: number } {
-  const canvasRight = viewportWidth - feedbackPanelWidth;
+  const canvasRight = viewportWidth - FEEDBACK_PANEL_WIDTH;
   const maximumLeft = Math.max(viewportMargin, canvasRight - composerWidth - viewportMargin);
   const preferredRight = target.rect.x + target.rect.width + composerGap;
   const preferredLeft = target.rect.x - composerWidth - composerGap;
@@ -38,7 +38,11 @@ export function getFeedbackComposerPosition(
   return { left, top };
 }
 
-export function FeedbackMode() {
+type FeedbackModeProps = {
+  onActiveChange?: (active: boolean) => void;
+};
+
+export function FeedbackMode({ onActiveChange }: FeedbackModeProps) {
   const [active, setActive] = useState(false);
   const [hoveredTarget, setHoveredTarget] = useState<FeedbackTarget | null>(null);
   const [selectedTarget, setSelectedTarget] = useState<FeedbackTarget | null>(null);
@@ -48,6 +52,10 @@ export function FeedbackMode() {
   const [saving, setSaving] = useState(false);
   const [capturing, setCapturing] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    onActiveChange?.(active);
+  }, [active, onActiveChange]);
 
   const refreshComments = useCallback(async () => {
     try {
@@ -242,7 +250,8 @@ export function FeedbackMode() {
       {!capturing && (
         <aside
           data-feedback-ui="true"
-          className="fixed bottom-0 right-0 top-0 z-[9998] flex w-[380px] flex-col border-l border-border-primary bg-background-primary shadow-2xl"
+          className="fixed bottom-0 right-0 top-0 z-[9998] flex flex-col border-l border-border-primary bg-background-primary shadow-2xl"
+          style={{ width: FEEDBACK_PANEL_WIDTH }}
           aria-label="Unresolved feedback"
         >
           <div className="titlebar-drag-region h-7 shrink-0" />

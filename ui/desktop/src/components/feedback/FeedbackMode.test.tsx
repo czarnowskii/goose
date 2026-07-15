@@ -44,13 +44,18 @@ describe('FeedbackMode', () => {
   });
 
   it('opens an unresolved-feedback panel from the keyboard shortcut', async () => {
-    render(<FeedbackMode />);
+    const onActiveChange = vi.fn();
+    render(<FeedbackMode onActiveChange={onActiveChange} />);
 
     fireEvent.keyDown(window, { key: 'f', metaKey: true, shiftKey: true });
 
     expect(await screen.findByRole('complementary', { name: 'Unresolved feedback' })).toBeVisible();
     expect(screen.getByText('1 unresolved comment')).toBeVisible();
     expect(screen.getByText('Only show our configured providers.')).toBeVisible();
+    expect(screen.getByRole('complementary', { name: 'Unresolved feedback' })).toHaveStyle({
+      width: '285px',
+    });
+    expect(onActiveChange).toHaveBeenLastCalledWith(true);
     await waitFor(() => expect(window.electron.listFeedback).toHaveBeenCalledOnce());
   });
 
